@@ -18,6 +18,7 @@ class EmployerForm extends StatelessWidget {
     required this.requirementsController,
     required this.contactController,
     required this.onSubmit,
+    this.isSubmitting = false,
   });
 
   final TextEditingController vacancyTitleController;
@@ -30,6 +31,7 @@ class EmployerForm extends StatelessWidget {
   final TextEditingController requirementsController;
   final TextEditingController contactController;
   final VoidCallback onSubmit;
+  final bool isSubmitting;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +101,11 @@ class EmployerForm extends StatelessWidget {
           subtitle: 'Kompaniya logotipi yoki ish joyi rasmini qo‘shing',
           button: 'Rasm tanlash',
         ),
-        SubmitButton(text: 'Vakansiyani joylashtirish', onTap: onSubmit),
+        SubmitButton(
+          text: 'Vakansiyani joylashtirish',
+          onTap: onSubmit,
+          loading: isSubmitting,
+        ),
       ],
     );
   }

@@ -40,27 +40,25 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
     return Scaffold(
       body: IndexedStack(index: currentIndex, children: screens),
+      backgroundColor: Colors.white,
       bottomNavigationBar: currentIndex == 1
           ? null
           : SafeArea(
               top: false,
               child: Container(
-                height: 94,
-                margin: const EdgeInsets.fromLTRB(14, 0, 14, 12),
+                height: 88,
+                width: double.infinity,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 6,
-                  vertical: 10,
+                  horizontal: 8,
+                  vertical: 8,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(34),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: .08),
-                      blurRadius: 28,
-                      offset: const Offset(0, 10),
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.black.withValues(alpha: 0.06),
                     ),
-                  ],
+                  ),
                 ),
                 child: Row(
                   children: List.generate(items.length, (index) {

@@ -18,7 +18,9 @@ class JobSeekerForm extends StatelessWidget {
     required this.educationController,
     required this.languageController,
     required this.aboutController,
+    required this.contactController,
     required this.onSubmit,
+    this.isSubmitting = false,
   });
 
   final TextEditingController professionController;
@@ -30,7 +32,9 @@ class JobSeekerForm extends StatelessWidget {
   final TextEditingController educationController;
   final TextEditingController languageController;
   final TextEditingController aboutController;
+  final TextEditingController contactController;
   final VoidCallback onSubmit;
+  final bool isSubmitting;
 
   @override
   Widget build(BuildContext context) {
@@ -94,13 +98,23 @@ class JobSeekerForm extends StatelessWidget {
           controller: aboutController,
           maxLines: 3,
         ),
+        InputItem(
+          icon: Icons.phone_outlined,
+          title: 'Aloqa ma’lumotlari *',
+          hint: 'Telefon, Telegram yoki Email',
+          controller: contactController,
+        ),
         const UploadBox(
           title: 'Rezyume / CV yuklash',
           subtitle: 'PDF, DOCX formatda yuklang',
           button: 'Fayl tanlash',
         ),
         const TipBox(),
-        SubmitButton(text: 'E’lon joylashtirish', onTap: onSubmit),
+        SubmitButton(
+          text: 'E’lon joylashtirish',
+          onTap: onSubmit,
+          loading: isSubmitting,
+        ),
       ],
     );
   }

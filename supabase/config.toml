@@ -1,0 +1,38 @@
+# https://supabase.com/docs/guides/cli/config
+
+[functions.telegram-bot-webhook]
+verify_jwt = false
+
+[functions.create-telegram-login-token]
+verify_jwt = false
+
+[functions.check-telegram-login-token]
+verify_jwt = false
+
+[functions.get-telegram-profile]
+verify_jwt = false
+
+[functions.upsert-telegram-profile]
+verify_jwt = false
+
+[functions.ai-chat]
+enabled = true
+verify_jwt = true
+import_map = "./functions/ai-chat/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/ai-chat/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/ai-chat/*.html" ]
+
+[functions.embed-vacancy]
+enabled = true
+verify_jwt = true
+import_map = "./functions/embed-vacancy/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/embed-vacancy/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/embed-vacancy/*.html" ]

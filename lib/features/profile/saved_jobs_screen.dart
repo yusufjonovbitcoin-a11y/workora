@@ -19,20 +19,32 @@ class SavedJobsScreen extends ConsumerWidget {
         elevation: 0,
         title: const Text('Saqlangan ishlar'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(18, 10, 18, 24),
-        children: [
-          const Text(
-            'Siz keyin ko‘rish uchun saqlagan vakansiyalar',
-            style: TextStyle(
-              color: Color(0xFF667085),
-              fontWeight: FontWeight.w600,
-            ),
+      body: homeState.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => Center(
+          child: TextButton(
+            onPressed: () => ref.invalidate(homeProvider),
+            child: const Text('Qayta yuklash'),
           ),
-          const SizedBox(height: 18),
-          for (final job in homeState.jobs)
-            HomeJobCard(job: job, onTap: () => context.push('/vacancy-detail')),
-        ],
+        ),
+        data: (state) => ListView(
+          padding: const EdgeInsets.fromLTRB(18, 10, 18, 24),
+          children: [
+            const Text(
+              'Siz keyin ko‘rish uchun saqlagan vakansiyalar',
+              style: TextStyle(
+                color: Color(0xFF667085),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 18),
+            for (final job in state.jobs)
+              HomeJobCard(
+                job: job,
+                onTap: () => context.push('/vacancy-detail/${job.id}'),
+              ),
+          ],
+        ),
       ),
     );
   }

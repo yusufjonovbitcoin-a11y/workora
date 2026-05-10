@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 
 class SubmitButton extends StatelessWidget {
-  const SubmitButton({super.key, required this.text, required this.onTap});
+  const SubmitButton({
+    super.key,
+    required this.text,
+    required this.onTap,
+    this.loading = false,
+  });
 
   final String text;
   final VoidCallback onTap;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: loading ? null : onTap,
       child: Container(
         height: 58,
         alignment: Alignment.center,
@@ -19,14 +25,23 @@ class SubmitButton extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(18),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
+        child: loading
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2.5,
+                ),
+              )
+            : Text(
+                text,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
       ),
     );
   }

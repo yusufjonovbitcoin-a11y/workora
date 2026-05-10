@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'data/vacancy_detail_mock_data.dart';
+import '../home/presentation/providers/home_provider.dart';
 import 'models/vacancy_detail_model.dart';
 import 'widgets/vacancy_benefits_tab.dart';
 import 'widgets/vacancy_bottom_actions.dart';
@@ -12,15 +13,17 @@ import 'widgets/vacancy_requirements_tab.dart';
 import 'widgets/vacancy_reviews_tab.dart';
 import 'widgets/vacancy_tabs.dart';
 
-class VacancyDetailScreen extends StatefulWidget {
-  const VacancyDetailScreen({super.key});
+class VacancyDetailScreen extends ConsumerStatefulWidget {
+  const VacancyDetailScreen({super.key, required this.vacancyId});
+
+  final String vacancyId;
 
   @override
-  State<VacancyDetailScreen> createState() => _VacancyDetailScreenState();
+  ConsumerState<VacancyDetailScreen> createState() =>
+      _VacancyDetailScreenState();
 }
 
-class _VacancyDetailScreenState extends State<VacancyDetailScreen> {
-  final VacancyDetailModel vacancy = VacancyDetailMockData.vacancy;
+class _VacancyDetailScreenState extends ConsumerState<VacancyDetailScreen> {
   int selectedTabIndex = 0;
   bool isSaved = false;
 
@@ -46,7 +49,7 @@ class _VacancyDetailScreenState extends State<VacancyDetailScreen> {
     );
   }
 
-  Widget _selectedTab() {
+  Widget _selectedTab(VacancyDetailModel vacancy) {
     return switch (selectedTabIndex) {
       0 => VacancyOverviewTab(vacancy: vacancy),
       1 => VacancyRequirementsTab(vacancy: vacancy),
@@ -58,41 +61,106 @@ class _VacancyDetailScreenState extends State<VacancyDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      bottomNavigationBar: VacancyBottomActions(
-        onMessage: _message,
-        onApply: _apply,
+    final vacancyState = ref.watch(vacancyDetailProvider(widget.vacancyId));
+
+    return vacancyState.when(
+      loading: () => const Scaffold(
+        backgroundColor: Color(0xFFF8FAFC),
+        body: SafeArea(child: Center(child: CircularProgressIndicator())),
       ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
-          children: [
-            VacancyDetailHeader(
-              vacancy: vacancy,
-              isSaved: isSaved,
-              onBack: () => context.go('/app'),
-              onSave: () => setState(() => isSaved = !isSaved),
-              onShare: _share,
-              onApply: _apply,
-            ),
-            const SizedBox(height: 22),
-            VacancyTabs(
-              selectedIndex: selectedTabIndex,
-              onChanged: (index) => setState(() => selectedTabIndex = index),
-            ),
-            const SizedBox(height: 22),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 220),
-              child: KeyedSubtree(
-                key: ValueKey(selectedTabIndex),
-                child: _selectedTab(),
+      error: (error, _) => Scaffold(
+        backgroundColor: const Color(0xFFF8FAFC),
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Vakansiyani yuklab bo‘lmadi',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () =>
+                        ref.invalidate(vacancyDetailProvider(widget.vacancyId)),
+                    child: const Text('Qayta urinish'),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-          ],
+          ),
         ),
       ),
+      data: (vacancy) {
+        if (vacancy == null) {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF8FAFC),
+            body: SafeArea(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Vakansiya topilmadi',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        onPressed: () => context.go('/app'),
+                        child: const Text('Bosh sahifaga qaytish'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
+        return Scaffold(
+          backgroundColor: const Color(0xFFF8FAFC),
+          bottomNavigationBar: VacancyBottomActions(
+            onMessage: _message,
+            onApply: _apply,
+          ),
+          body: SafeArea(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+              children: [
+                VacancyDetailHeader(
+                  vacancy: vacancy,
+                  isSaved: isSaved,
+                  onBack: () => context.go('/app'),
+                  onSave: () => setState(() => isSaved = !isSaved),
+                  onShare: _share,
+                  onApply: _apply,
+                ),
+                const SizedBox(height: 22),
+                VacancyTabs(
+                  selectedIndex: selectedTabIndex,
+                  onChanged: (index) =>
+                      setState(() => selectedTabIndex = index),
+                ),
+                const SizedBox(height: 22),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 220),
+                  child: KeyedSubtree(
+                    key: ValueKey(selectedTabIndex),
+                    child: _selectedTab(vacancy),
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -16,15 +16,16 @@ class HomeJobCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         constraints: const BoxConstraints(minHeight: 145),
-        margin: const EdgeInsets.only(bottom: 18),
+        margin: EdgeInsets.zero,
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(28),
+          borderRadius: BorderRadius.circular(26),
+          border: Border.all(color: Colors.black.withValues(alpha: 0.04)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: .045),
-              blurRadius: 22,
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 24,
               offset: const Offset(0, 10),
             ),
           ],
@@ -143,11 +144,12 @@ class HomeJobCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: const Text(
-                    'Apply',
+                    'Ariza',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.2,
                     ),
                   ),
                 ),

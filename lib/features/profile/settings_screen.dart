@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../auth/services/telegram_auth_service.dart';
 import 'widgets/logout_button.dart';
 import 'widgets/settings_switch_tile.dart';
 import 'widgets/settings_tile.dart';
@@ -138,8 +140,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: const Text('Bekor qilish'),
             ),
             FilledButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pop(context);
+                await Supabase.instance.client.auth.signOut();
+                await TelegramAuthService.clearLocalTelegramUser();
+                if (!context.mounted) return;
                 context.go('/login');
               },
               child: const Text('Chiqish'),

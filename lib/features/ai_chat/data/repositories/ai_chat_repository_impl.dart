@@ -1,6 +1,6 @@
 import '../../domain/entities/chat_message_entity.dart';
 import '../../domain/repositories/ai_chat_repository.dart';
-import '../services/demo_ai_reply_service.dart';
+import '../services/supabase_ai_chat_service.dart';
 import '../sources/ai_chat_mock_source.dart';
 
 class AiChatRepositoryImpl implements AiChatRepository {
@@ -10,7 +10,7 @@ class AiChatRepositoryImpl implements AiChatRepository {
   });
 
   final AiChatMockSource source;
-  final DemoAiReplyService replyService;
+  final SupabaseAiChatService replyService;
 
   @override
   ChatMessageEntity getInitialMessage() {
@@ -18,12 +18,7 @@ class AiChatRepositoryImpl implements AiChatRepository {
   }
 
   @override
-  List<String> getQuickRequests() {
-    return source.getQuickRequests();
-  }
-
-  @override
-  String generateReply(String text) {
+  Future<String> generateReply(String text) {
     return replyService.generateReply(text);
   }
 }

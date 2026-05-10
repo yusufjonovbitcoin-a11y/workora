@@ -7,27 +7,33 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
-        Expanded(
+        const Expanded(
           child: Text(
             'Tavsiya etilgan ishlar',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.5,
+              color: Color(0xFF0F172A),
+            ),
           ),
         ),
         Text(
-          'Barchasini koвЂrish',
+          'Barchasini ko‘rish',
           style: TextStyle(
             color: AppColors.primary,
-            fontWeight: FontWeight.w800,
-            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            fontSize: 15,
+            letterSpacing: -0.2,
           ),
         ),
-        SizedBox(width: 6),
+        const SizedBox(width: 4),
         Icon(
           Icons.arrow_forward_ios_rounded,
           color: AppColors.primary,
-          size: 16,
+          size: 14,
         ),
       ],
     );

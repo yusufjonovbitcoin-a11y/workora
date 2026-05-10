@@ -6,6 +6,15 @@ class ReviewModel {
     required this.date,
   });
 
+  factory ReviewModel.fromJson(Map<String, dynamic> json) {
+    return ReviewModel(
+      userName: json['user_name']?.toString() ?? '',
+      rating: _doubleValue(json['rating'], fallback: 0),
+      comment: json['comment']?.toString() ?? '',
+      date: json['date']?.toString() ?? '',
+    );
+  }
+
   final String userName;
   final double rating;
   final String comment;
@@ -14,6 +23,7 @@ class ReviewModel {
 
 class VacancyDetailModel {
   const VacancyDetailModel({
+    required this.id,
     required this.title,
     required this.company,
     required this.verified,
@@ -37,6 +47,34 @@ class VacancyDetailModel {
     required this.reviews,
   });
 
+  factory VacancyDetailModel.fromVacancyRow(Map<String, dynamic> row) {
+    return VacancyDetailModel(
+      id: row['id']?.toString() ?? '',
+      title: row['title']?.toString() ?? '',
+      company: row['company']?.toString() ?? '',
+      verified: row['verified'] == true,
+      logo: row['logo']?.toString() ?? _initials(row['company']),
+      match: _formatMatch(row['match_score']),
+      location: row['location']?.toString() ?? '',
+      salary: row['salary']?.toString() ?? '',
+      jobType: row['job_type']?.toString() ?? '',
+      contractType: row['contract_type']?.toString() ?? '',
+      description: row['description']?.toString() ?? '',
+      startDate: row['start_date']?.toString() ?? '',
+      employeesNeeded: _countText(row['employees_needed'], 'nafar'),
+      languageRequirement: row['language_requirement']?.toString() ?? '',
+      housing: row['housing']?.toString() ?? '',
+      requirements: _stringList(row['requirements']),
+      benefits: _stringList(row['benefits']),
+      companyDescription: row['company_description']?.toString() ?? '',
+      companyLocation: row['company_location']?.toString() ?? '',
+      companyEmployees: row['company_employees']?.toString() ?? '',
+      companyActiveVacancies: _countText(row['company_active_vacancies'], 'ta'),
+      reviews: _reviews(row['reviews']),
+    );
+  }
+
+  final String id;
   final String title;
   final String company;
   final bool verified;
@@ -58,4 +96,49 @@ class VacancyDetailModel {
   final String companyEmployees;
   final String companyActiveVacancies;
   final List<ReviewModel> reviews;
+}
+
+String _formatMatch(Object? value) {
+  if (value == null) return '90%';
+  final text = value.toString();
+  return text.endsWith('%') ? text : '$text%';
+}
+
+String _initials(Object? value) {
+  final text = value?.toString().trim() ?? '';
+  if (text.isEmpty) return 'W';
+  return text
+      .split(RegExp(r'\s+'))
+      .where((part) => part.isNotEmpty)
+      .take(2)
+      .map((part) => part[0].toUpperCase())
+      .join();
+}
+
+String _countText(Object? value, String suffix) {
+  if (value == null) return '';
+  final text = value.toString();
+  return text.endsWith(suffix) ? text : '$text $suffix';
+}
+
+List<String> _stringList(Object? value) {
+  if (value is List) {
+    return value.map((item) => item.toString()).toList(growable: false);
+  }
+  return const [];
+}
+
+List<ReviewModel> _reviews(Object? value) {
+  if (value is List) {
+    return value
+        .whereType<Map>()
+        .map((item) => ReviewModel.fromJson(Map<String, dynamic>.from(item)))
+        .toList(growable: false);
+  }
+  return const [];
+}
+
+double _doubleValue(Object? value, {required double fallback}) {
+  if (value is num) return value.toDouble();
+  return double.tryParse(value?.toString() ?? '') ?? fallback;
 }

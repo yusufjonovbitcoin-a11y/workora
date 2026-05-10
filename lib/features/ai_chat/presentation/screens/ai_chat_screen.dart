@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,7 +5,6 @@ import '../providers/ai_chat_provider.dart';
 import '../widgets/chat_bubble.dart';
 import '../widgets/chat_header.dart';
 import '../widgets/message_input.dart';
-import '../widgets/quick_requests.dart';
 
 class AiChatScreen extends ConsumerStatefulWidget {
   const AiChatScreen({super.key, this.onExit});
@@ -22,20 +19,16 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-  void _sendMessage(String text) {
+  Future<void> _sendMessage(String text) async {
     final value = text.trim();
     if (value.isEmpty) return;
 
-    ref.read(aiChatProvider.notifier).addUserMessage(value);
     _controller.clear();
+    final sendFuture = ref.read(aiChatProvider.notifier).sendMessage(value);
     _scrollToBottom();
-
-    Timer(const Duration(seconds: 1), () {
-      if (!mounted) return;
-
-      ref.read(aiChatProvider.notifier).addAiReply(value);
-      _scrollToBottom();
-    });
+    await sendFuture;
+    if (!mounted) return;
+    _scrollToBottom();
   }
 
   void _scrollToBottom() {
@@ -75,17 +68,14 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                   ...state.messages.map(
                     (message) => ChatBubble(message: message),
                   ),
-                  const SizedBox(height: 12),
-                  QuickRequests(
-                    requests: state.quickRequests,
-                    onTap: _sendMessage,
-                  ),
                 ],
               ),
             ),
             MessageInput(
               controller: _controller,
-              onSend: () => _sendMessage(_controller.text),
+              onSend: () {
+                _sendMessage(_controller.text);
+              },
             ),
           ],
         ),

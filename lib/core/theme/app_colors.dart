@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class AppColors {
   static const primary = Color(0xFF006B4F);
   static const primaryDark = Color(0xFF004D3A);
+  /// Splash / onboarding — chuqur yashil fon
+  static const splashBackground = Color(0xFF063D2E);
   static const accent = Color(0xFFFF6B35);
 
   static const background = Color(0xFFFAF8F4);

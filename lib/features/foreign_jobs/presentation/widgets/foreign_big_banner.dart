@@ -8,8 +8,8 @@ class ForeignBigBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 210,
-      padding: const EdgeInsets.all(24),
+      height: 186,
+      padding: const EdgeInsets.fromLTRB(22, 20, 22, 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         gradient: const LinearGradient(
@@ -33,33 +33,35 @@ class ForeignBigBanner extends StatelessWidget {
             child: Text('рџЊЌвњ€пёЏрџЏ™пёЏ', style: TextStyle(fontSize: 76)),
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width * .56,
+            width: MediaQuery.sizeOf(context).width * 0.54,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const Text(
-                  'Xorijda ishlash вЂ” yangi imkoniyatlar eshigi!',
+                  'Xorijda ishlash — yangi imkoniyatlar eshigi!',
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 25,
-                    height: 1.18,
+                    fontSize: 22,
+                    height: 1.15,
                     fontWeight: FontWeight.w900,
+                    letterSpacing: -0.3,
                   ),
                 ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Ish, tajriba va daromad вЂ” bir joyda.',
+                const SizedBox(height: 10),
+                Text(
+                  'Ish, tajriba va daromad — bir joyda.',
                   maxLines: 2,
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
+                    color: Colors.white.withValues(alpha: 0.92),
+                    fontSize: 14,
                     height: 1.25,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(height: 14),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -69,18 +71,19 @@ class ForeignBigBanner extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'KoвЂproq maвЂ™lumot',
+                        'Ko‘proq ma’lumot',
                         style: TextStyle(
                           color: AppColors.primary,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w900,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.2,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Icon(
                         Icons.arrow_forward_rounded,
                         color: AppColors.primary,

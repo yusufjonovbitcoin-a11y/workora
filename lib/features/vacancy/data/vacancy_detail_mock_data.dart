@@ -4,6 +4,7 @@ class VacancyDetailMockData {
   const VacancyDetailMockData._();
 
   static const vacancy = VacancyDetailModel(
+    id: 'mock-factory-worker',
     title: 'Factory Worker',
     company: 'Samsung Korea',
     verified: true,
