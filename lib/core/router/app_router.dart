@@ -4,6 +4,7 @@ import '../../features/auth/login_screen.dart';
 import '../../features/auth/otp_screen.dart';
 import '../../features/auth/register_screen.dart';
 import '../../features/foreign_jobs/presentation/screens/foreign_application_screen.dart';
+import '../../features/foreign_jobs/presentation/screens/foreign_jobs_screen.dart';
 import '../../features/main_nav/main_navigation_screen.dart';
 import '../../features/messages/chat_detail_screen.dart';
 import '../../features/profile/applied_jobs_screen.dart';
@@ -55,6 +56,10 @@ class AppRouter {
       GoRoute(
         path: '/foreign-application',
         builder: (context, state) => const ForeignApplicationScreen(),
+      ),
+      GoRoute(
+        path: '/foreign-jobs',
+        builder: (context, state) => const ForeignJobsScreen(),
       ),
       GoRoute(
         path: '/saved-jobs',

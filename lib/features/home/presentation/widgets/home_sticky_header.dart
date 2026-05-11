@@ -11,6 +11,7 @@ class HomeStickyHeader extends StatelessWidget {
     required this.elevated,
     this.onNotificationTap,
     this.brand,
+    this.leading,
   });
 
   final bool elevated;
@@ -18,6 +19,9 @@ class HomeStickyHeader extends StatelessWidget {
 
   /// Matn o‘rniga ko‘rsatiladigan logo yoki brend.
   final Widget? brand;
+
+  /// Masalan orqaga (`Navigator.pop`) tugmasi.
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +57,10 @@ class HomeStickyHeader extends StatelessWidget {
               height: 44,
               child: Row(
                 children: [
+                  if (leading != null) ...[
+                    leading!,
+                    const SizedBox(width: 4),
+                  ],
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerLeft,

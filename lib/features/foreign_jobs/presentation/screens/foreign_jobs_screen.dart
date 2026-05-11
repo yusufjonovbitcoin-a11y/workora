@@ -59,6 +59,22 @@ class _ForeignJobsScreenState extends ConsumerState<ForeignJobsScreen> {
             child: HomeStickyHeader(
               elevated: _headerElevated,
               onNotificationTap: () => context.push('/notifications'),
+              leading: ModalRoute.of(context)?.canPop ?? false
+                  ? IconButton(
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 40,
+                        minHeight: 44,
+                      ),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        size: 20,
+                        color: Color(0xFF0F172A),
+                      ),
+                      onPressed: () => context.pop(),
+                    )
+                  : null,
               brand: Image.asset(
                 ForeignJobsScreen.brandLogoAsset,
                 height: 28,

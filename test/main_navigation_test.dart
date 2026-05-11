@@ -4,16 +4,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:workora/features/main_nav/main_navigation_screen.dart';
 
 void main() {
-  testWidgets('opens foreign jobs tab from bottom navigation', (tester) async {
+  testWidgets('bottom navigation shows core tabs', (tester) async {
     await tester.pumpWidget(
       const ProviderScope(
         child: MaterialApp(home: MainNavigationScreen()),
       ),
     );
 
-    await tester.tap(find.text('Xorijda ish'));
-    await tester.pump(const Duration(milliseconds: 300));
-
-    expect(find.textContaining('Xorijda ish'), findsWidgets);
+    expect(find.text('Bosh sahifa'), findsOneWidget);
+    expect(find.text('AI Chat'), findsOneWidget);
+    expect(find.text('Xabarlar'), findsOneWidget);
+    expect(find.text('Profil'), findsOneWidget);
+    expect(find.byIcon(Icons.add_rounded), findsOneWidget);
   });
 }

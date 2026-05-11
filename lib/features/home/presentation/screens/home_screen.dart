@@ -8,6 +8,7 @@ import '../providers/home_provider.dart';
 import '../widgets/ai_recommendation_banner.dart';
 import '../widgets/category_chips.dart';
 import '../widgets/home_job_card.dart';
+import '../widgets/home_foreign_jobs_entry.dart';
 import '../widgets/home_search_bar.dart';
 import '../widgets/home_sticky_header.dart';
 import '../widgets/job_filter_sheet.dart';
@@ -65,6 +66,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onNotificationTap: () => context.push('/notifications'),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                HomeSearchBar(
+                  query: query,
+                  onChanged: (value) => ref
+                      .read(homeSearchQueryProvider.notifier)
+                      .state = value,
+                  onFilterTap: () => showHomeJobFilterSheet(context, ref),
+                ),
+                const SizedBox(height: 14),
+                const HomeForeignJobsEntry(),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
           Expanded(
             child: homeState.when(
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -89,20 +108,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     slivers: [
                       SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                         sliver: SliverToBoxAdapter(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              HomeSearchBar(
-                                query: query,
-                                onChanged: (value) => ref
-                                    .read(homeSearchQueryProvider.notifier)
-                                    .state = value,
-                                onFilterTap: () =>
-                                    showHomeJobFilterSheet(context, ref),
-                              ),
-                              const SizedBox(height: 20),
                               if (state.categories.isNotEmpty) ...[
                                 CategoryChips(categories: state.categories),
                                 const SizedBox(height: 22),
