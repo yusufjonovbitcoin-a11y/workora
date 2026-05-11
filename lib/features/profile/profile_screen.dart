@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
-import 'data/profile_mock_data.dart';
+import 'models/profile_model.dart';
 import 'widgets/ai_recommendation_card.dart';
 import 'widgets/completion_card.dart';
 import 'widgets/profile_header.dart';
@@ -14,7 +14,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const profile = ProfileMockData.profile;
+    const profile = ProfileModel.empty;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -39,10 +39,10 @@ class ProfileScreen extends StatelessWidget {
               aiMatchPercent: profile.aiMatchPercent,
               onApplied: () => context.push('/applied-jobs'),
               onSaved: () => context.push('/saved-jobs'),
-              onAiMatch: () => context.push('/vacancy-detail'),
+              onAiMatch: () => context.go('/app'),
             ),
             const SizedBox(height: 18),
-            AiRecommendationCard(onTap: () => context.push('/vacancy-detail')),
+            AiRecommendationCard(onTap: () => context.go('/app')),
             const SizedBox(height: 24),
             const Text(
               'Mening ma’lumotlarim',

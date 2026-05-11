@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/design_system/app_shadows.dart';
+import '../../../../core/design_system/app_spacing.dart';
+import '../../../../core/design_system/app_typography.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/job_seeker_entity.dart';
 import 'mini_tag.dart';
@@ -11,94 +15,88 @@ class JobSeekerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(18),
+    final scheme = Theme.of(context).colorScheme;
+
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(26),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .04),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: scheme.outline.withValues(alpha: 0.35)),
+        boxShadow: AppShadows.card,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 58,
-                height: 58,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFDDF8EC),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Text(
-                  _initials(seeker.profession),
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w900,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.s12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  width: 48.r,
+                  height: 48.r,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? scheme.primary.withValues(alpha: 0.2)
+                          : AppColors.accentSoft,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        _initials(seeker.profession),
+                        style: AppTypography.cardTitle(context).copyWith(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      seeker.profession,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
+                const SizedBox(width: AppSpacing.s12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        seeker.profession,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.cardTitle(context),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      seeker.experience,
-                      style: const TextStyle(
-                        color: Color(0xFF667085),
-                        fontWeight: FontWeight.w700,
+                      const SizedBox(height: AppSpacing.s4),
+                      Text(
+                        seeker.experience,
+                        style: AppTypography.caption(context),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Text(
-            seeker.about,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Color(0xFF344054),
-              fontWeight: FontWeight.w600,
-              height: 1.4,
+              ],
             ),
-          ),
-          const SizedBox(height: 14),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              MiniTag(icon: Icons.location_on_outlined, text: seeker.location),
-              MiniTag(
-                icon: Icons.attach_money_rounded,
-                text: seeker.expectedSalary,
+            const SizedBox(height: AppSpacing.s8),
+            Text(
+              seeker.about,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.body(context).copyWith(
+                color: scheme.onSurface.withValues(alpha: 0.72),
               ),
-              if (seeker.contact.isNotEmpty)
-                MiniTag(icon: Icons.phone_outlined, text: seeker.contact),
-            ],
-          ),
-        ],
+            ),
+            const SizedBox(height: AppSpacing.s8),
+            Wrap(
+              spacing: AppSpacing.s8,
+              runSpacing: AppSpacing.s8,
+              children: [
+                MiniTag(icon: Icons.location_on_outlined, text: seeker.location),
+                MiniTag(
+                  icon: Icons.attach_money_rounded,
+                  text: seeker.expectedSalary,
+                ),
+                if (seeker.contact.isNotEmpty)
+                  MiniTag(icon: Icons.phone_outlined, text: seeker.contact),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

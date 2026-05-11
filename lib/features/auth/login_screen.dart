@@ -27,6 +27,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   PhoneNumber? _phone;
   bool _loading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _redirectIfLoggedIn());
+  }
+
+  /// Allaqachon kirilgan bo‘lsa, login sahifasida turmasdan ilovaga kiradi.
+  void _redirectIfLoggedIn() {
+    if (!mounted) return;
+    if (!Supabase.instance.isInitialized) return;
+    if (Supabase.instance.client.auth.currentSession != null) {
+      context.go('/app');
+    }
+  }
+
   void _snack(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(backgroundColor: AppColors.primary, content: Text(message)),

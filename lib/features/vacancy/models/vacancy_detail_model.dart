@@ -1,3 +1,5 @@
+import '../../home/domain/match_percent.dart';
+
 class ReviewModel {
   const ReviewModel({
     required this.userName,
@@ -54,7 +56,7 @@ class VacancyDetailModel {
       company: row['company']?.toString() ?? '',
       verified: row['verified'] == true,
       logo: row['logo']?.toString() ?? _initials(row['company']),
-      match: _formatMatch(row['match_score']),
+      match: formatMatchFromDbRaw(row['match_score']),
       location: row['location']?.toString() ?? '',
       salary: row['salary']?.toString() ?? '',
       jobType: row['job_type']?.toString() ?? '',
@@ -96,12 +98,6 @@ class VacancyDetailModel {
   final String companyEmployees;
   final String companyActiveVacancies;
   final List<ReviewModel> reviews;
-}
-
-String _formatMatch(Object? value) {
-  if (value == null) return '90%';
-  final text = value.toString();
-  return text.endsWith('%') ? text : '$text%';
 }
 
 String _initials(Object? value) {

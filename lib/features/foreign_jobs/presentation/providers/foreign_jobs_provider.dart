@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/repositories/foreign_jobs_repository_impl.dart';
-import '../../data/sources/foreign_jobs_mock_source.dart';
 import '../../domain/entities/country_entity.dart';
 import '../../domain/entities/foreign_program_entity.dart';
 import '../../domain/entities/region_entity.dart';
@@ -19,12 +18,8 @@ class ForeignJobsState {
   final List<ForeignProgramEntity> programs;
 }
 
-final foreignJobsMockSourceProvider = Provider<ForeignJobsMockSource>((ref) {
-  return const ForeignJobsMockSource();
-});
-
 final foreignJobsRepositoryProvider = Provider<ForeignJobsRepository>((ref) {
-  return ForeignJobsRepositoryImpl(ref.watch(foreignJobsMockSourceProvider));
+  return const ForeignJobsRepositoryImpl();
 });
 
 final foreignJobsProvider = Provider<ForeignJobsState>((ref) {

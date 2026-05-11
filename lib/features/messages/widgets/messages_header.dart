@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_colors.dart';
+
 class MessagesHeader extends StatelessWidget {
   const MessagesHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 94,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        children: [
+    return ColoredBox(
+      color: AppColors.primary,
+      child: SizedBox(
+        height: 94,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          children: [
           Column(
             children: [
               Container(
@@ -37,7 +41,7 @@ class MessagesHeader extends StatelessWidget {
               width: 58,
               height: 58,
               decoration: BoxDecoration(
-                color: const Color(0xFF9AB79E),
+                color: AppColors.primaryLight,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
@@ -50,6 +54,7 @@ class MessagesHeader extends StatelessWidget {
             ),
           ),
         ],
+        ),
       ),
     );
   }

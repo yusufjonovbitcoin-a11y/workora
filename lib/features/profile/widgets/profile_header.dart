@@ -24,7 +24,7 @@ class ProfileHeader extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(36),
         gradient: const LinearGradient(
-          colors: [AppColors.primaryDark, Color(0xFF10A77A)],
+          colors: [AppColors.primaryDark, AppColors.primaryLight],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

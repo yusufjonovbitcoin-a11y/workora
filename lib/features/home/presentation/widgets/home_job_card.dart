@@ -1,163 +1,184 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/design_system/app_shadows.dart';
+import '../../../../core/design_system/app_spacing.dart';
+import '../../../../core/design_system/app_typography.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/job_entity.dart';
 import 'mini_tag.dart';
 
 class HomeJobCard extends StatelessWidget {
-  const HomeJobCard({super.key, required this.job, this.onTap});
+  const HomeJobCard({
+    super.key,
+    required this.job,
+    required this.matchLabel,
+    this.onTap,
+  });
 
   final JobEntity job;
+  /// Profil + vakansiya bo‘yicha yoki DB `match_score` (masalan: `87%`).
+  final String matchLabel;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 145),
-        margin: EdgeInsets.zero,
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(26),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.04)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 24,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 82,
-                  height: 82,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF3F6FA),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        job.logo,
-                        style: const TextStyle(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                  ),
+    final scheme = Theme.of(context).colorScheme;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final logoSide = (constraints.maxWidth * 0.18).clamp(48.0, 58.0);
+
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(12.r),
+            child: Ink(
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: scheme.outline.withValues(alpha: 0.35),
                 ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 7,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFDDF8EC),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Text(
-                    '${job.match} mos',
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w800,
+                boxShadow: AppShadows.card,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.s12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: logoSide,
+                          height: logoSide,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: scheme.surface.withValues(alpha: 0.85),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.s4,
+                                ),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    job.logo,
+                                    style: AppTypography.cardTitle(context)
+                                        .copyWith(color: AppColors.primary),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.s8),
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).brightness ==
+                                    Brightness.dark
+                                ? scheme.primary.withValues(alpha: 0.2)
+                                : AppColors.accentSoft,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.s8,
+                              vertical: AppSpacing.s4,
+                            ),
+                            child: Text(
+                              '$matchLabel mos',
+                              style: AppTypography.caption(context).copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                    const SizedBox(width: AppSpacing.s12),
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            job.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.cardTitle(context),
+                          ),
+                          const SizedBox(height: AppSpacing.s4),
+                          Text(
+                            job.company,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.caption(context),
+                          ),
+                          const SizedBox(height: AppSpacing.s8),
+                          Row(
+                            children: [
+                              Flexible(
+                                child: MiniTag(
+                                  icon: Icons.location_on_outlined,
+                                  text: job.location,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.s8),
+                              Flexible(
+                                child: MiniTag(
+                                  icon: Icons.attach_money_rounded,
+                                  text: job.salary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.s8),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.bookmark_border_rounded,
+                          size: 20.r,
+                          color: scheme.onSurface.withValues(alpha: 0.45),
+                        ),
+                        const SizedBox(height: AppSpacing.s12),
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: scheme.primary,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.s12,
+                              vertical: AppSpacing.s8,
+                            ),
+                            child: Text(
+                              'Ariza',
+                              style: AppTypography.body(context).copyWith(
+                                color: scheme.onPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    job.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    job.company,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 17,
-                      color: Color(0xFF667085),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: MiniTag(
-                          icon: Icons.location_on_outlined,
-                          text: job.location,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Flexible(
-                        child: MiniTag(
-                          icon: Icons.attach_money_rounded,
-                          text: job.salary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
               ),
             ),
-            const SizedBox(width: 10),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.bookmark_border_rounded,
-                  size: 30,
-                  color: Color(0xFF344054),
-                ),
-                const SizedBox(height: 42),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 22,
-                    vertical: 14,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                  child: const Text(
-                    'Ariza',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.2,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

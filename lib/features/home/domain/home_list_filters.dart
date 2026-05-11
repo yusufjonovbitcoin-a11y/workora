@@ -38,6 +38,10 @@ bool jobTypeMatchesFilter(String selected, String jobType) {
   final j = _normalize(jobType);
   if (j.isEmpty) return true;
   final s = _normalize(selected);
+  // "Barchasi" yoki bo'sh — ish turini filtrlashmaymiz (bosh sahifada barcha vakansiyalar chiqsin).
+  if (s.isEmpty || s == 'barchasi') {
+    return true;
+  }
   if (s.contains('toliq') && s.contains('vaqt')) {
     return j.contains('toliq') ||
         j.contains('full-time') ||

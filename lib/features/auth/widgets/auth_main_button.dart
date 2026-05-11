@@ -25,7 +25,7 @@ class AuthMainButton extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [AppColors.primary, Color(0xFF009E72)],
+            colors: [AppColors.primaryLight, AppColors.primaryDark],
           ),
           borderRadius: BorderRadius.circular(22),
           boxShadow: [

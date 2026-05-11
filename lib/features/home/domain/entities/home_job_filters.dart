@@ -11,7 +11,7 @@ class HomeJobFilters {
 
   factory HomeJobFilters.initial() => HomeJobFilters(
         categories: [],
-        jobType: "To‘liq vaqt",
+        jobType: 'Barchasi',
         locationQuery: '',
         salaryMin: 200,
         salaryMax: 5000,

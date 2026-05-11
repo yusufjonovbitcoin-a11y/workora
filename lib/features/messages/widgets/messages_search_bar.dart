@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_colors.dart';
+
 class MessagesSearchBar extends StatelessWidget {
   const MessagesSearchBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: const [
-        _TabChip(text: 'Private Message', active: true),
-        SizedBox(width: 10),
-        _TabChip(text: 'Group', active: false),
-        SizedBox(width: 10),
-        _TabChip(text: 'Request', active: false),
-        Spacer(),
-        Icon(Icons.search, color: Color(0xFF6E9674), size: 30),
+      children: [
+        const _TabChip(text: 'Private Message', active: true),
+        const SizedBox(width: 10),
+        const _TabChip(text: 'Group', active: false),
+        const SizedBox(width: 10),
+        const _TabChip(text: 'Request', active: false),
+        const Spacer(),
+        Icon(
+          Icons.search,
+          color: AppColors.primary.withValues(alpha: 0.65),
+          size: 30,
+        ),
       ],
     );
   }
@@ -30,7 +36,7 @@ class _TabChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
       decoration: BoxDecoration(
-        color: active ? const Color(0xFF7FA384) : const Color(0xFFF2F3F2),
+        color: active ? AppColors.primaryLight : const Color(0xFFF2F3F2),
         borderRadius: BorderRadius.circular(22),
       ),
       child: Text(

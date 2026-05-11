@@ -22,7 +22,7 @@ class ChatHeader extends StatelessWidget {
           ),
           CircleAvatar(
             radius: 26,
-            backgroundColor: const Color(0xFF7FA384),
+            backgroundColor: AppColors.primaryLight,
             child: Text(avatar, style: const TextStyle(fontSize: 24)),
           ),
           const SizedBox(width: 14),
@@ -35,7 +35,7 @@ class ChatHeader extends StatelessWidget {
                   name,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    color: Color(0xFF16351F),
+                    color: AppColors.primary,
                     fontSize: 18,
                     fontWeight: FontWeight.w900,
                   ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/design_system/app_typography.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class ChatHeader extends StatelessWidget {
@@ -10,7 +12,7 @@ class ChatHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+      padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 12.h),
       decoration: const BoxDecoration(color: Color(0xFFF8FAFC)),
       child: Row(
         children: [
@@ -18,36 +20,45 @@ class ChatHeader extends StatelessWidget {
             onPressed: onExit,
             icon: const Icon(Icons.arrow_back_ios_new_rounded),
             color: AppColors.primary,
+            iconSize: 20.r,
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: 4.w),
           Container(
-            width: 58,
-            height: 58,
+            width: 44.r,
+            height: 44.r,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(22),
+              borderRadius: BorderRadius.circular(14.r),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.smart_toy_rounded,
               color: AppColors.primary,
-              size: 34,
+              size: 24.r,
             ),
           ),
-          const SizedBox(width: 14),
-          const Expanded(
+          SizedBox(width: 10.w),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'AI Assistant',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                  style: AppTypography.cardTitle(context),
                 ),
-                SizedBox(height: 3),
+                SizedBox(height: 2.h),
                 Row(
                   children: [
-                    CircleAvatar(radius: 5, backgroundColor: Color(0xFF10B981)),
-                    SizedBox(width: 7),
-                    Text('Onlayn', style: TextStyle(color: Color(0xFF667085))),
+                    CircleAvatar(
+                      radius: 3.5.r,
+                      backgroundColor: AppColors.primaryLight,
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      'Onlayn',
+                      style: AppTypography.caption(context).copyWith(
+                        color: const Color(0xFF667085),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -56,6 +67,7 @@ class ChatHeader extends StatelessWidget {
           IconButton(
             onPressed: () {},
             icon: const Icon(Icons.more_horiz_rounded),
+            iconSize: 22.r,
           ),
         ],
       ),

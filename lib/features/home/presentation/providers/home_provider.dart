@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../data/repositories/home_repository_impl.dart';
-import '../../data/sources/home_mock_source.dart';
 import '../../data/sources/supabase_home_source.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/job_seeker_entity.dart';
@@ -10,6 +9,8 @@ import '../../domain/entities/job_entity.dart';
 import '../../domain/repositories/home_repository.dart';
 import '../../../vacancy/models/vacancy_detail_model.dart';
 import '../../domain/entities/home_job_filters.dart';
+import '../../../profile/models/profile_record.dart';
+import '../../../profile/presentation/profile_providers.dart';
 
 class HomeState {
   const HomeState({
@@ -28,10 +29,6 @@ final homeSearchQueryProvider = StateProvider<String>((ref) => '');
 final homeJobFiltersProvider =
     StateProvider<HomeJobFilters>((ref) => HomeJobFilters.initial());
 
-final homeMockSourceProvider = Provider<HomeMockSource>((ref) {
-  return const HomeMockSource();
-});
-
 final homeSupabaseSourceProvider = Provider<SupabaseHomeSource?>((ref) {
   if (!Supabase.instance.isInitialized) return null;
   return SupabaseHomeSource(Supabase.instance.client);
@@ -39,9 +36,16 @@ final homeSupabaseSourceProvider = Provider<SupabaseHomeSource?>((ref) {
 
 final homeRepositoryProvider = Provider<HomeRepository>((ref) {
   return HomeRepositoryImpl(
-    mockSource: ref.watch(homeMockSourceProvider),
     supabaseSource: ref.watch(homeSupabaseSourceProvider),
   );
+});
+
+/// Vakansiya kartochkasi mosligi — `profiles` asosida (sessiya bo‘lsa).
+final jobMatchProfileProvider = FutureProvider<ProfileRecord?>((ref) async {
+  if (!Supabase.instance.isInitialized) return null;
+  if (Supabase.instance.client.auth.currentUser == null) return null;
+  final repo = ref.watch(supabaseProfileRepositoryProvider);
+  return repo.fetchCurrentProfile();
 });
 
 final homeProvider = FutureProvider<HomeState>((ref) async {

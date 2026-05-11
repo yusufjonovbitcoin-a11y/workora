@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/home_job_filters.dart';
 
 /// Bottom sheet UI provided by design; state is synced with [HomeJobFilters].
@@ -132,7 +133,7 @@ class _JobFilterSheetState extends State<JobFilterSheet> {
                     child: const Text(
                       'Tozalash',
                       style: TextStyle(
-                        color: Color(0xFF008C5A),
+                        color: AppColors.primary,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -167,6 +168,7 @@ class _JobFilterSheetState extends State<JobFilterSheet> {
                 spacing: 12,
                 runSpacing: 12,
                 children: [
+                  choiceChip('Barchasi', selectedJobType),
                   choiceChip('To‘liq vaqt', selectedJobType),
                   choiceChip('Qisman vaqt', selectedJobType),
                   choiceChip('Stajirovka', selectedJobType),
@@ -206,7 +208,7 @@ class _JobFilterSheetState extends State<JobFilterSheet> {
                 min: 200,
                 max: 5000,
                 values: salaryRange,
-                activeColor: const Color(0xFF009B66),
+                activeColor: AppColors.primary,
                 inactiveColor: const Color(0xFFE5E7EB),
                 onChanged: (value) {
                   setState(() => salaryRange = value);
@@ -254,7 +256,7 @@ class _JobFilterSheetState extends State<JobFilterSheet> {
                 height: 64,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF008C5A),
+                    backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -326,7 +328,7 @@ class _JobFilterSheetState extends State<JobFilterSheet> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFF009B66)),
+        border: Border.all(color: AppColors.primary),
         borderRadius: BorderRadius.circular(18),
         color: Colors.white,
       ),
@@ -348,7 +350,7 @@ class _JobFilterSheetState extends State<JobFilterSheet> {
               ),
               IconButton(
                 onPressed: () => addCategory(categoryController.text),
-                icon: const Icon(Icons.add, color: Color(0xFF009B66)),
+                icon: Icon(Icons.add, color: AppColors.primary),
               ),
             ],
           ),
@@ -369,7 +371,7 @@ class _JobFilterSheetState extends State<JobFilterSheet> {
                   },
                   backgroundColor: const Color(0xFFE6F7F0),
                   labelStyle: const TextStyle(
-                    color: Color(0xFF008C5A),
+                    color: AppColors.primary,
                     fontWeight: FontWeight.w700,
                   ),
                   shape: RoundedRectangleBorder(
@@ -399,7 +401,7 @@ class _JobFilterSheetState extends State<JobFilterSheet> {
             color: const Color(0xFFE6F7F0),
             borderRadius: BorderRadius.circular(14),
           ),
-          child: Icon(icon, color: const Color(0xFF008C5A)),
+          child: Icon(icon, color: AppColors.primary),
         ),
         const SizedBox(width: 14),
         Column(
@@ -455,7 +457,7 @@ class _JobFilterSheetState extends State<JobFilterSheet> {
         child: Text(
           text,
           style: TextStyle(
-            color: active ? const Color(0xFF008C5A) : const Color(0xFF111827),
+            color: active ? AppColors.primary : const Color(0xFF111827),
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -480,7 +482,7 @@ class _JobFilterSheetState extends State<JobFilterSheet> {
         child: Text(
           text,
           style: TextStyle(
-            color: active ? const Color(0xFF008C5A) : const Color(0xFF111827),
+            color: active ? AppColors.primary : const Color(0xFF111827),
             fontWeight: FontWeight.w700,
           ),
         ),

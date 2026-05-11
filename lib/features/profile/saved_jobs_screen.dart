@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../home/domain/match_percent.dart';
 import '../home/presentation/providers/home_provider.dart';
 import '../home/presentation/widgets/home_job_card.dart';
 
@@ -11,6 +12,7 @@ class SavedJobsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeState = ref.watch(homeProvider);
+    final profileForMatch = ref.watch(jobMatchProfileProvider).valueOrNull;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -41,6 +43,7 @@ class SavedJobsScreen extends ConsumerWidget {
             for (final job in state.jobs)
               HomeJobCard(
                 job: job,
+                matchLabel: effectiveMatchLabel(job, profileForMatch),
                 onTap: () => context.push('/vacancy-detail/${job.id}'),
               ),
           ],

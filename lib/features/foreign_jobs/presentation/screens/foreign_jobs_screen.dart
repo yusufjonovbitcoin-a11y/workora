@@ -49,6 +49,9 @@ class _ForeignJobsScreenState extends ConsumerState<ForeignJobsScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(foreignJobsProvider);
+    final emptyContent = state.regions.isEmpty &&
+        state.countries.isEmpty &&
+        state.programs.isEmpty;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -65,7 +68,7 @@ class _ForeignJobsScreenState extends ConsumerState<ForeignJobsScreen> {
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(
                         minWidth: 40,
-                        minHeight: 44,
+                        minHeight: 46,
                       ),
                       icon: const Icon(
                         Icons.arrow_back_ios_new_rounded,
@@ -75,19 +78,25 @@ class _ForeignJobsScreenState extends ConsumerState<ForeignJobsScreen> {
                       onPressed: () => context.pop(),
                     )
                   : null,
-              brand: Image.asset(
-                ForeignJobsScreen.brandLogoAsset,
-                height: 28,
-                fit: BoxFit.contain,
-                alignment: Alignment.centerLeft,
-                filterQuality: FilterQuality.high,
-                errorBuilder: (_, __, ___) => Text(
-                  'IshTopdi',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.5,
-                        color: const Color(0xFF0F172A),
-                      ),
+              brand: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: 50,
+                  maxWidth: MediaQuery.sizeOf(context).width * 0.52,
+                ),
+                child: Image.asset(
+                  ForeignJobsScreen.brandLogoAsset,
+                  height: 46,
+                  fit: BoxFit.contain,
+                  alignment: Alignment.centerLeft,
+                  filterQuality: FilterQuality.high,
+                  errorBuilder: (_, __, ___) => Text(
+                    'IshTopdi',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.45,
+                          color: const Color(0xFF0F172A),
+                        ),
+                  ),
                 ),
               ),
             ),
@@ -99,57 +108,87 @@ class _ForeignJobsScreenState extends ConsumerState<ForeignJobsScreen> {
                 parent: BouncingScrollPhysics(),
               ),
               slivers: [
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-                  sliver: SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ForeignSearchBar(),
-                        const SizedBox(height: 20),
-                        RegionChips(regions: state.regions),
-                        const SizedBox(height: 22),
-                        const ForeignBigBanner(),
-                        const SizedBox(height: 26),
-                        const ForeignSectionHeader(title: 'Mashhur davlatlar'),
-                        const SizedBox(height: 14),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  sliver: SliverToBoxAdapter(
-                    child: CountryList(countries: state.countries),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 28)),
-                const SliverPadding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  sliver: SliverToBoxAdapter(
-                    child: ForeignSectionHeader(
-                      title: 'Tavsiya etilgan dasturlar',
-                    ),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 14)),
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => Padding(
-                        padding: EdgeInsets.only(
-                          bottom: index == state.programs.length - 1 ? 0 : 14,
-                        ),
-                        child: ForeignProgramCard(
-                          program: state.programs[index],
-                        ),
+                if (emptyContent) ...[
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const ForeignSearchBar(),
+                          const SizedBox(height: 28),
+                          Text(
+                            'Xorijda ish bo‘yicha ro‘yxatlar hozircha serverda '
+                            'ulanmagan. Ma’lumotlar qo‘shilgach shu yerda '
+                            'ko‘rinadi.',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: const Color(0xFF64748B),
+                                  height: 1.45,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                        ],
                       ),
-                      childCount: state.programs.length,
                     ),
                   ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 96)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 96)),
+                ] else ...[
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const ForeignSearchBar(),
+                          const SizedBox(height: 20),
+                          RegionChips(regions: state.regions),
+                          const SizedBox(height: 22),
+                          const ForeignBigBanner(),
+                          const SizedBox(height: 26),
+                          const ForeignSectionHeader(
+                            title: 'Mashhur davlatlar',
+                          ),
+                          const SizedBox(height: 14),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    sliver: SliverToBoxAdapter(
+                      child: CountryList(countries: state.countries),
+                    ),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 28)),
+                  const SliverPadding(
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    sliver: SliverToBoxAdapter(
+                      child: ForeignSectionHeader(
+                        title: 'Tavsiya etilgan dasturlar',
+                      ),
+                    ),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 14)),
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => Padding(
+                          padding: EdgeInsets.only(
+                            bottom:
+                                index == state.programs.length - 1 ? 0 : 14,
+                          ),
+                          child: ForeignProgramCard(
+                            program: state.programs[index],
+                          ),
+                        ),
+                        childCount: state.programs.length,
+                      ),
+                    ),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 96)),
+                ],
               ],
             ),
           ),

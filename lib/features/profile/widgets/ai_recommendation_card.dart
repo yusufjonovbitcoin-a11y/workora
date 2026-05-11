@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/design_system/app_typography.dart';
 import '../../../core/theme/app_colors.dart';
 
 class AiRecommendationCard extends StatelessWidget {
@@ -17,8 +18,8 @@ class AiRecommendationCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          gradient: const LinearGradient(
-            colors: [Color(0xFFE6F6EA), Color(0xFFCBECD6)],
+          gradient: LinearGradient(
+            colors: [AppColors.accentSoft, AppColors.navBarLight],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -30,43 +31,41 @@ class AiRecommendationCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'AI siz uchun yangi\nishlarni topdi',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: AppTypography.cardTitle(context).copyWith(
                       color: AppColors.primary,
-                      fontSize: 23,
-                      fontWeight: FontWeight.w900,
-                      height: 1.1,
+                      fontWeight: FontWeight.w700,
+                      height: 1.15,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  const Text(
+                  const SizedBox(height: 8),
+                  Text(
                     'Sizga mos 7 ta yangi ish topildi',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Color(0xFF4B5563),
-                      fontSize: 14,
+                    style: AppTypography.caption(context).copyWith(
+                      color: const Color(0xFF4B5563),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
+                      horizontal: 16,
+                      vertical: 10,
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Ko‘rish',
-                      style: TextStyle(
+                      style: AppTypography.caption(context).copyWith(
                         color: Colors.white,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
@@ -74,7 +73,7 @@ class AiRecommendationCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            const Text('🤖', style: TextStyle(fontSize: 64)),
+            Text('🤖', style: TextStyle(fontSize: 40)),
           ],
         ),
       ),

@@ -31,6 +31,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   bool _loading = false;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _redirectIfLoggedIn());
+  }
+
+  void _redirectIfLoggedIn() {
+    if (!mounted) return;
+    if (!Supabase.instance.isInitialized) return;
+    if (Supabase.instance.client.auth.currentSession != null) {
+      context.go('/app');
+    }
+  }
+
+  @override
   void dispose() {
     _password.dispose();
     _passwordConfirm.dispose();

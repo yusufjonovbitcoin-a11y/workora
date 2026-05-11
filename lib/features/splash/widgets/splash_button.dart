@@ -17,7 +17,7 @@ class SplashButton extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [Color(0xFF12B981), Color(0xFF0D9668)],
+            colors: [AppColors.primaryLight, AppColors.primary],
           ),
           borderRadius: BorderRadius.circular(28),
           boxShadow: [

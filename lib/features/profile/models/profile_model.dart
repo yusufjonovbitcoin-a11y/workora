@@ -3,6 +3,25 @@ import 'language_model.dart';
 import 'skill_model.dart';
 
 class ProfileModel {
+  /// Mocksiz boshlang‘ich / Supabase kutilganda.
+  static const empty = ProfileModel(
+    fullName: '',
+    profession: '',
+    bio: '',
+    phone: '',
+    location: '',
+    imageUrl: '',
+    verified: false,
+    completion: 0,
+    appliedJobsCount: 0,
+    savedJobsCount: 0,
+    aiMatchPercent: 0,
+    skills: [],
+    languages: [],
+    experiences: [],
+    cvFileName: '',
+  );
+
   const ProfileModel({
     required this.fullName,
     required this.profession,

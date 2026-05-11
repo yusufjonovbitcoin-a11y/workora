@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'data/notifications_mock_data.dart';
-import 'widgets/notification_card.dart';
-
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
 
@@ -17,9 +14,20 @@ class NotificationsScreen extends StatelessWidget {
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(18, 10, 18, 24),
-        children: [
-          for (final notification in NotificationsMockData.notifications)
-            NotificationCard(notification: notification),
+        children: const [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 32),
+            child: Center(
+              child: Text(
+                'Bildirishnomalar yo‘q.',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF64748B),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

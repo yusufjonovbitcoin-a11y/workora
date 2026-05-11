@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../home/presentation/providers/home_provider.dart';
 import '../auth/services/telegram_auth_service.dart';
-import 'data/profile_mock_data.dart';
 import 'models/experience_model.dart';
 import 'models/language_model.dart';
 import 'models/profile_record.dart';
@@ -26,20 +26,16 @@ class EditProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
-  final profile = ProfileMockData.profile;
+  late final fullNameController = TextEditingController();
+  late final professionController = TextEditingController();
+  late final bioController = TextEditingController();
+  late final phoneController = TextEditingController();
+  late final locationController = TextEditingController();
 
-  late final fullNameController = TextEditingController(text: profile.fullName);
-  late final professionController = TextEditingController(
-    text: profile.profession,
-  );
-  late final bioController = TextEditingController(text: profile.bio);
-  late final phoneController = TextEditingController(text: profile.phone);
-  late final locationController = TextEditingController(text: profile.location);
-
-  late final List<SkillModel> skills = [...profile.skills];
-  late final List<LanguageModel> languages = [...profile.languages];
-  late final List<ExperienceModel> experiences = [...profile.experiences];
-  late String cvFileName = profile.cvFileName;
+  late final List<SkillModel> skills = [];
+  late final List<LanguageModel> languages = [];
+  late final List<ExperienceModel> experiences = [];
+  late String cvFileName = '';
 
   String? _avatarUrl;
   bool _loadingInitial = true;
@@ -208,6 +204,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
         await repo.upsertProfile(record);
         if (!mounted) return;
+        ref.invalidate(jobMatchProfileProvider);
         _showSnack('Profil saqlandi');
         Navigator.pop(context);
         return;
@@ -235,6 +232,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           record: record,
         );
         if (!mounted) return;
+        ref.invalidate(jobMatchProfileProvider);
         _showSnack('Profil saqlandi');
         Navigator.pop(context);
         return;
@@ -267,8 +265,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             children: [
               Center(
                 child: ProfileAvatarPicker(
-                  imageUrl: _avatarUrl ?? profile.imageUrl,
-                  verified: profile.verified,
+                  imageUrl: _avatarUrl ?? '',
+                  verified: false,
                   onTap: () =>
                       _showSnack('Rasm URL keyinroq Storage bilan ulanadi'),
                   size: 112,

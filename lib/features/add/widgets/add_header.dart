@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_colors.dart';
+
 class AddHeader extends StatelessWidget {
   const AddHeader({super.key});
 
@@ -58,7 +60,7 @@ class AddHeader extends StatelessWidget {
                   width: 10,
                   height: 10,
                   decoration: const BoxDecoration(
-                    color: Color(0xFF10B981),
+                    color: AppColors.primary,
                     shape: BoxShape.circle,
                   ),
                 ),

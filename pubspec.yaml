@@ -26,6 +26,7 @@ dependencies:
   shared_preferences: ^2.5.3
   intl_phone_field: ^3.2.0
   http: ^1.6.0
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +39,7 @@ flutter:
     - .env
     - assets/icons/google_logo.svg
     - assets/icons/logo.png
+    - assets/icons/logoaylana.png
     - assets/images/workora_hero.png
     - assets/images/auth_login_hero.webp
     - assets/images/auth_register_hero.png

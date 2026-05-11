@@ -11,11 +11,11 @@ class CountryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 172,
+      height: 208,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: countries.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 14),
+        separatorBuilder: (_, __) => const SizedBox(width: 16),
         itemBuilder: (context, index) {
           return CountryCard(country: countries[index]);
         },

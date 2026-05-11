@@ -1,13 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/theme/app_colors.dart';
 import 'widgets/splash_button.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   static const _heroAsset = 'assets/images/workora_hero.png';
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _tryResumeSession());
+  }
+
+  /// Supabase sessiyasi saqlangan bo‘lsa (oldingi kirish), login qayta so‘ralmaydi.
+  Future<void> _tryResumeSession() async {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    if (!mounted) return;
+    if (!Supabase.instance.isInitialized) return;
+
+    final session = Supabase.instance.client.auth.currentSession;
+    if (session != null) {
+      if (!mounted) return;
+      context.go('/app');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +53,7 @@ class SplashScreen extends StatelessWidget {
                 children: [
                   Center(
                     child: Image.asset(
-                      _heroAsset,
+                      SplashScreen._heroAsset,
                       width: width * 0.95,
                       fit: BoxFit.contain,
                       filterQuality: FilterQuality.high,

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/design_system/app_typography.dart';
 
-/// Bosh sahifada ish qidiruvi ostidagi «Xorijda ish» ga o‘tish.
+/// Qidiruv ostidagi «Xorijda ish» — chapda logo (ClipOval = rasm aylanasi).
 class HomeForeignJobsEntry extends StatelessWidget {
   const HomeForeignJobsEntry({super.key});
+
+  static const String _logoAsset = 'assets/icons/logoaylana.png';
 
   void _open(BuildContext context) {
     GoRouter.of(context).push('/foreign-jobs');
@@ -13,61 +15,73 @@ class HomeForeignJobsEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bg = isDark
+        ? scheme.surface.withValues(alpha: 0.9)
+        : const Color(0xFFF3F4F6);
+    final border = isDark
+        ? scheme.outline.withValues(alpha: 0.35)
+        : const Color(0xFFE5E7EB);
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => _open(context),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: AppColors.primary.withValues(alpha: 0.22),
-          ),
+          color: bg,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: border),
         ),
         child: Row(
           children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.85),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.12),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+            ClipOval(
+              clipBehavior: Clip.antiAlias,
+              child: SizedBox(
+                width: 64,
+                height: 64,
+                child: Transform.scale(
+                  scale: 1.18,
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    _logoAsset,
+                    width: 64,
+                    height: 64,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                    filterQuality: FilterQuality.high,
+                    errorBuilder: (_, __, ___) => ColoredBox(
+                      color: scheme.surfaceContainerHigh,
+                      child: Center(
+                        child: Icon(
+                          Icons.language_rounded,
+                          size: 32,
+                          color: scheme.onSurface.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ),
                   ),
-                ],
-              ),
-              child: const Icon(
-                Icons.language_rounded,
-                color: AppColors.primary,
-                size: 24,
+                ),
               ),
             ),
-            const SizedBox(width: 14),
-            const Expanded(
+            const SizedBox(width: 16),
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Xorijda ish',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.3,
-                      color: AppColors.textPrimary,
+                    style: AppTypography.cardTitle(context).copyWith(
+                      letterSpacing: -0.2,
+                      color: scheme.onSurface,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
                     'Chet el vakansiyalari va ariza topshirish',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textSecondary,
+                    style: AppTypography.caption(context).copyWith(
+                      fontWeight: FontWeight.w500,
                       height: 1.25,
                     ),
                   ),
@@ -76,7 +90,7 @@ class HomeForeignJobsEntry extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right_rounded,
-              color: AppColors.primary.withValues(alpha: 0.85),
+              color: scheme.onSurface.withValues(alpha: 0.35),
               size: 28,
             ),
           ],

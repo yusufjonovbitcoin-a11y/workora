@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/repositories/ai_chat_repository_impl.dart';
 import '../../data/services/supabase_ai_chat_service.dart';
-import '../../data/sources/ai_chat_mock_source.dart';
 import '../../domain/entities/chat_message_entity.dart';
 import '../../domain/repositories/ai_chat_repository.dart';
 
@@ -20,17 +19,12 @@ class AiChatState {
   }
 }
 
-final aiChatMockSourceProvider = Provider<AiChatMockSource>((ref) {
-  return const AiChatMockSource();
-});
-
 final supabaseAiChatServiceProvider = Provider<SupabaseAiChatService>((ref) {
   return const SupabaseAiChatService();
 });
 
 final aiChatRepositoryProvider = Provider<AiChatRepository>((ref) {
   return AiChatRepositoryImpl(
-    source: ref.watch(aiChatMockSourceProvider),
     replyService: ref.watch(supabaseAiChatServiceProvider),
   );
 });

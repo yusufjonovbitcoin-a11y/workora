@@ -44,13 +44,12 @@ class AppRouter {
       ),
       GoRoute(
         path: '/vacancy-detail',
-        builder: (context, state) =>
-            const VacancyDetailScreen(vacancyId: 'mock-factory-worker'),
+        builder: (context, state) => const VacancyDetailScreen(vacancyId: ''),
       ),
       GoRoute(
         path: '/vacancy-detail/:id',
         builder: (context, state) => VacancyDetailScreen(
-          vacancyId: state.pathParameters['id'] ?? 'mock-factory-worker',
+          vacancyId: state.pathParameters['id'] ?? '',
         ),
       ),
       GoRoute(

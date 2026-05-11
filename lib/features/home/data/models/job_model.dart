@@ -1,4 +1,5 @@
 import '../../domain/entities/job_entity.dart';
+import '../../domain/match_percent.dart';
 
 class JobModel extends JobEntity {
   const JobModel({
@@ -26,19 +27,13 @@ class JobModel extends JobEntity {
       company: row['company']?.toString() ?? '',
       location: row['location']?.toString() ?? '',
       salary: row['salary']?.toString() ?? '',
-      match: _formatMatch(row['match_score']),
+      match: formatMatchFromDbRaw(row['match_score']),
       logo: row['logo']?.toString() ?? _initials(row['company']),
       category: row['category']?.toString() ?? '',
       jobType: row['job_type']?.toString() ?? '',
       createdAt: createdAt,
     );
   }
-}
-
-String _formatMatch(Object? value) {
-  if (value == null) return '90%';
-  final text = value.toString();
-  return text.endsWith('%') ? text : '$text%';
 }
 
 String _initials(Object? value) {

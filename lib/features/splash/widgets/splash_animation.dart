@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_colors.dart';
+
 class SplashAnimation extends StatelessWidget {
   const SplashAnimation({super.key});
 
@@ -10,24 +12,24 @@ class SplashAnimation extends StatelessWidget {
       width: double.infinity,
       child: Stack(
         alignment: Alignment.center,
-        children: const [
-          _BackgroundCircle(),
-          Positioned(
+        children: [
+          const _BackgroundCircle(),
+          const Positioned(
             left: 30,
             bottom: 40,
             child: _Leaf(size: 90, rotation: -0.7),
           ),
-          Positioned(
+          const Positioned(
             right: 18,
             bottom: 38,
             child: _Leaf(size: 90, rotation: 0.7),
           ),
-          Positioned(top: 20, child: _JobCard()),
-          Positioned(top: 4, child: _Clip()),
-          Positioned(right: 50, top: 76, child: _MagnifierLens()),
-          Positioned(right: 35, top: 150, child: _MagnifierHandle()),
-          Positioned(bottom: 38, child: _Briefcase()),
-          Positioned(left: 52, bottom: 30, child: _PersonBadge()),
+          const Positioned(top: 20, child: _JobCard()),
+          const Positioned(top: 4, child: _Clip()),
+          const Positioned(right: 50, top: 76, child: _MagnifierLens()),
+          const Positioned(right: 35, top: 150, child: _MagnifierHandle()),
+          const Positioned(bottom: 38, child: _Briefcase()),
+          const Positioned(left: 52, bottom: 30, child: _PersonBadge()),
           Positioned(
             left: 42,
             top: 80,
@@ -41,7 +43,10 @@ class SplashAnimation extends StatelessWidget {
             top: 70,
             child: Text(
               '✦',
-              style: TextStyle(color: Color(0xFF8BE0B6), fontSize: 24),
+              style: TextStyle(
+                color: AppColors.primaryLight.withValues(alpha: 0.85),
+                fontSize: 24,
+              ),
             ),
           ),
         ],
@@ -79,7 +84,7 @@ class _Leaf extends StatelessWidget {
       child: Icon(
         Icons.eco_rounded,
         size: size,
-        color: const Color(0xFF0C765E).withValues(alpha: .7),
+        color: AppColors.primaryDark.withValues(alpha: .7),
       ),
     );
   }
@@ -97,7 +102,7 @@ class _JobCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF7F4EA),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF6FB299), width: 4),
+        border: Border.all(color: AppColors.primaryLight, width: 4),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: .20),
@@ -108,10 +113,10 @@ class _JobCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Text(
+          Text(
             'JOB',
             style: TextStyle(
-              color: Color(0xFF007A5C),
+              color: AppColors.primary,
               fontSize: 24,
               fontWeight: FontWeight.w900,
             ),
@@ -136,8 +141,8 @@ class _JobLine extends StatelessWidget {
           Container(
             width: 8,
             height: 8,
-            decoration: const BoxDecoration(
-              color: Color(0xFF8ABFA8),
+            decoration: BoxDecoration(
+              color: AppColors.primaryLight.withValues(alpha: 0.75),
               shape: BoxShape.circle,
             ),
           ),
@@ -146,7 +151,7 @@ class _JobLine extends StatelessWidget {
             child: Container(
               height: 6,
               decoration: BoxDecoration(
-                color: const Color(0xFFB6CFC2),
+                color: AppColors.accentSoft,
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -166,7 +171,7 @@ class _Clip extends StatelessWidget {
       width: 88,
       height: 38,
       decoration: BoxDecoration(
-        color: const Color(0xFF1E6F5A),
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -237,13 +242,13 @@ class _Briefcase extends StatelessWidget {
       width: 210,
       height: 125,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF0B604D), Color(0xFF003F32)],
+        gradient: LinearGradient(
+          colors: [AppColors.primaryLight, AppColors.primaryDark],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFF1D7B65), width: 3),
+        border: Border.all(color: AppColors.primaryLight, width: 3),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: .32),
@@ -261,7 +266,7 @@ class _Briefcase extends StatelessWidget {
               width: 58,
               height: 36,
               decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF0B604D), width: 8),
+                border: Border.all(color: AppColors.primaryDark, width: 8),
                 borderRadius: BorderRadius.circular(14),
               ),
             ),
@@ -291,8 +296,8 @@ class _PersonBadge extends StatelessWidget {
       width: 68,
       height: 68,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF0C765E), Color(0xFF03513F)],
+        gradient: LinearGradient(
+          colors: [AppColors.primaryLight, AppColors.primary],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [

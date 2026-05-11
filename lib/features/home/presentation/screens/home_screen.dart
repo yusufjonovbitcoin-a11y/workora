@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/design_system/app_spacing.dart';
+import '../../../../core/design_system/app_typography.dart';
 import '../../domain/entities/home_job_filters.dart';
 import '../../domain/home_list_filters.dart';
+import '../../domain/match_percent.dart';
 import '../providers/home_provider.dart';
 import '../widgets/ai_recommendation_banner.dart';
-import '../widgets/category_chips.dart';
 import '../widgets/home_job_card.dart';
 import '../widgets/home_foreign_jobs_entry.dart';
-import '../widgets/home_search_bar.dart';
+import '../widgets/search_section.dart';
 import '../widgets/home_sticky_header.dart';
 import '../widgets/job_filter_sheet.dart';
 import '../widgets/job_seeker_card.dart';
@@ -26,7 +28,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   late final ScrollController _scrollController;
   bool _headerElevated = false;
 
-  static const _scrollElevationThreshold = 14.0;
+  static const _scrollElevationThreshold = 12.0;
 
   @override
   void initState() {
@@ -40,6 +42,41 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (next != _headerElevated) {
       setState(() => _headerElevated = next);
     }
+  }
+
+  static const _scrollPhysics = AlwaysScrollableScrollPhysics(
+    parent: BouncingScrollPhysics(),
+  );
+
+  /// Qidiruv va «Xorijda ish» — scroll ichida, tepaga surilganda header bilan birga harakatlanadi.
+  Widget _sliverSearchAndForeignJobs(String query) {
+    return SliverPadding(
+      padding: const EdgeInsets.fromLTRB(
+        0,
+        AppSpacing.s12,
+        0,
+        AppSpacing.s4,
+      ),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SearchSection(
+              query: query,
+              onChanged: (value) =>
+                  ref.read(homeSearchQueryProvider.notifier).state = value,
+              onFilterTap: () => showHomeJobFilterSheet(context, ref),
+            ),
+            const SizedBox(height: AppSpacing.s16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.s20),
+              child: HomeForeignJobsEntry(),
+            ),
+            const SizedBox(height: AppSpacing.s16),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -56,7 +93,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final filters = ref.watch(homeJobFiltersProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
           SafeArea(
@@ -66,68 +103,87 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onNotificationTap: () => context.push('/notifications'),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                HomeSearchBar(
-                  query: query,
-                  onChanged: (value) => ref
-                      .read(homeSearchQueryProvider.notifier)
-                      .state = value,
-                  onFilterTap: () => showHomeJobFilterSheet(context, ref),
-                ),
-                const SizedBox(height: 14),
-                const HomeForeignJobsEntry(),
-                const SizedBox(height: 16),
-              ],
-            ),
-          ),
           Expanded(
             child: homeState.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => _HomeError(
-                message: 'Vakansiyalarni yuklab bo‘lmadi',
-                onRetry: () => ref.invalidate(homeProvider),
+              loading: () => RefreshIndicator(
+                color: Theme.of(context).colorScheme.primary,
+                displacement: AppSpacing.s32,
+                onRefresh: () => ref.refresh(homeProvider.future),
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  physics: _scrollPhysics,
+                  slivers: [
+                    _sliverSearchAndForeignJobs(query),
+                    const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                  ],
+                ),
+              ),
+              error: (error, _) => RefreshIndicator(
+                color: Theme.of(context).colorScheme.primary,
+                displacement: AppSpacing.s32,
+                onRefresh: () => ref.refresh(homeProvider.future),
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  physics: _scrollPhysics,
+                  slivers: [
+                    _sliverSearchAndForeignJobs(query),
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: _HomeError(
+                        message: 'Vakansiyalarni yuklab bo‘lmadi',
+                        onRetry: () => ref.invalidate(homeProvider),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               data: (state) {
                 final filteredJobs =
                     applyHomeJobFilters(state.jobs, query, filters);
                 final filteredSeekers =
                     applyHomeSeekerFilters(state.jobSeekers, query, filters);
+                final profileForMatch =
+                    ref.watch(jobMatchProfileProvider).valueOrNull;
 
                 return RefreshIndicator(
-                  color: const Color(0xFF22C55E),
-                  displacement: 48,
-                  onRefresh: () => ref.refresh(homeProvider.future),
+                  color: Theme.of(context).colorScheme.primary,
+                  displacement: AppSpacing.s32,
+                  onRefresh: () async {
+                    ref.invalidate(jobMatchProfileProvider);
+                    final _ = await ref.refresh(homeProvider.future);
+                  },
                   child: CustomScrollView(
                     controller: _scrollController,
-                    physics: const AlwaysScrollableScrollPhysics(
-                      parent: BouncingScrollPhysics(),
-                    ),
+                    physics: _scrollPhysics,
                     slivers: [
+                      _sliverSearchAndForeignJobs(query),
                       SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.s20,
+                          0,
+                          AppSpacing.s20,
+                          0,
+                        ),
                         sliver: SliverToBoxAdapter(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (state.categories.isNotEmpty) ...[
-                                CategoryChips(categories: state.categories),
-                                const SizedBox(height: 22),
-                              ],
                               const AiRecommendationBanner(),
-                              const SizedBox(height: 26),
+                              const SizedBox(height: AppSpacing.s24),
                               const SectionHeader(),
-                              const SizedBox(height: 14),
+                              const SizedBox(height: AppSpacing.s12),
                             ],
                           ),
                         ),
                       ),
                       if (filteredJobs.isEmpty)
                         SliverPadding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.s20,
+                          ),
                           sliver: SliverToBoxAdapter(
                             child: _EmptyJobs(
                               filtersMayHideJobs: state.jobs.isNotEmpty,
@@ -139,20 +195,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         )
                       else
                         SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSpacing.s20,
+                            0,
+                            AppSpacing.s20,
+                            0,
+                          ),
                           sliver: SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (context, index) {
                                 final job = filteredJobs[index];
                                 return Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom:
-                                        index == filteredJobs.length - 1
-                                            ? 12
-                                            : 14,
+                                  padding: const EdgeInsets.only(
+                                    bottom: AppSpacing.s12,
                                   ),
                                   child: HomeJobCard(
                                     job: job,
+                                    matchLabel: effectiveMatchLabel(
+                                      job,
+                                      profileForMatch,
+                                    ),
                                     onTap: () => context.go(
                                       '/vacancy-detail/${job.id}',
                                     ),
@@ -164,7 +226,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ),
                       SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.s20,
+                          AppSpacing.s8,
+                          AppSpacing.s20,
+                          0,
+                        ),
                         sliver: SliverToBoxAdapter(
                           child: _SectionTitle(
                             title: query.trim().isEmpty
@@ -173,19 +240,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ),
                       ),
-                      const SliverToBoxAdapter(child: SizedBox(height: 12)),
+                      const SliverToBoxAdapter(
+                        child: SizedBox(height: AppSpacing.s12),
+                      ),
                       if (filteredSeekers.isEmpty)
                         const SliverPadding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSpacing.s20,
+                          ),
                           sliver: SliverToBoxAdapter(child: _EmptySeekers()),
                         )
                       else
                         SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSpacing.s20,
+                            0,
+                            AppSpacing.s20,
+                            0,
+                          ),
                           sliver: SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (context, index) => Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.only(
+                                  bottom: AppSpacing.s12,
+                                ),
                                 child: JobSeekerCard(
                                   seeker: filteredSeekers[index],
                                 ),
@@ -194,7 +272,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                           ),
                         ),
-                      const SliverToBoxAdapter(child: SizedBox(height: 96)),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: AppSpacing.s32 +
+                              AppSpacing.s32 +
+                              AppSpacing.s32,
+                        ),
+                      ),
                     ],
                   ),
                 );
@@ -245,12 +329,7 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 21,
-        fontWeight: FontWeight.w800,
-        letterSpacing: -0.4,
-        color: Color(0xFF101828),
-      ),
+      style: AppTypography.sectionTitle(context),
     );
   }
 }
@@ -265,21 +344,20 @@ class _HomeError extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.s24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontWeight: FontWeight.w700),
+              style: AppTypography.body(context).copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             FilledButton(
               onPressed: onRetry,
-              style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFF22C55E),
-              ),
               child: const Text('Qayta urinish'),
             ),
           ],
@@ -300,41 +378,44 @@ class _EmptyJobs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
+    final scheme = Theme.of(context).colorScheme;
+
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+        color: scheme.surface.withValues(alpha: 0.65),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: scheme.outline.withValues(alpha: 0.35)),
       ),
-      child: Column(
-        children: [
-          Text(
-            filtersMayHideJobs
-                ? 'Filtrlarga mos vakansiya topilmadi. Filtrlarni o‘zgartiring.'
-                : 'Hozircha vakansiyalar yo‘q. Keyinroq qayting.',
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Color(0xFF667085),
-              fontWeight: FontWeight.w600,
-              height: 1.45,
-              fontSize: 15,
-            ),
-          ),
-          if (filtersMayHideJobs && onRetryFilters != null) ...[
-            const SizedBox(height: 14),
-            TextButton(
-              onPressed: onRetryFilters,
-              child: const Text(
-                'Filtrlarni tiklash',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF16A34A),
-                ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.s16),
+        child: Column(
+          children: [
+            Text(
+              filtersMayHideJobs
+                  ? 'Filtrlarga mos vakansiya topilmadi. Filtrlarni o‘zgartiring.'
+                  : 'Hozircha vakansiyalar yo‘q. Keyinroq qayting.',
+              textAlign: TextAlign.center,
+              style: AppTypography.body(context).copyWith(
+                color: scheme.onSurface.withValues(alpha: 0.65),
+                fontWeight: FontWeight.w500,
+                height: 1.35,
               ),
             ),
+            if (filtersMayHideJobs && onRetryFilters != null) ...[
+              const SizedBox(height: AppSpacing.s12),
+              TextButton(
+                onPressed: onRetryFilters,
+                child: Text(
+                  'Filtrlarni tiklash',
+                  style: AppTypography.caption(context).copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: scheme.primary,
+                  ),
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -345,21 +426,24 @@ class _EmptySeekers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
+    final scheme = Theme.of(context).colorScheme;
+
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+        color: scheme.surface.withValues(alpha: 0.65),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: scheme.outline.withValues(alpha: 0.35)),
       ),
-      child: const Text(
-        'Hozircha ish qidiruvchi anketalari yo‘q.',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Color(0xFF667085),
-          fontWeight: FontWeight.w600,
-          height: 1.45,
-          fontSize: 15,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.s16),
+        child: Text(
+          'Hozircha ish qidiruvchi anketalari yo‘q.',
+          textAlign: TextAlign.center,
+          style: AppTypography.body(context).copyWith(
+            color: scheme.onSurface.withValues(alpha: 0.65),
+            fontWeight: FontWeight.w500,
+            height: 1.35,
+          ),
         ),
       ),
     );

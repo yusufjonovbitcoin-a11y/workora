@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/design_system/app_spacing.dart';
+import '../../../../core/design_system/app_typography.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class SectionHeader extends StatelessWidget {
@@ -9,31 +12,39 @@ class SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(
+        Expanded(
           child: Text(
             'Tavsiya etilgan ishlar',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
-              color: Color(0xFF0F172A),
-            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.sectionTitle(context),
           ),
         ),
-        Text(
-          'Barchasini ko‘rish',
-          style: TextStyle(
-            color: AppColors.primary,
-            fontWeight: FontWeight.w700,
-            fontSize: 15,
-            letterSpacing: -0.2,
+        TextButton(
+          onPressed: () {},
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s4),
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-        ),
-        const SizedBox(width: 4),
-        Icon(
-          Icons.arrow_forward_ios_rounded,
-          color: AppColors.primary,
-          size: 14,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Barchasini ko‘rish',
+                style: AppTypography.caption(context).copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.s4),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: AppColors.primary,
+                size: 11.r,
+              ),
+            ],
+          ),
         ),
       ],
     );

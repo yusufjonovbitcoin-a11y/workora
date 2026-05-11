@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'chat_detail_screen.dart';
-import 'data/messages_mock_data.dart';
-import 'widgets/conversation_card.dart';
+import '../../core/theme/app_colors.dart';
 import 'widgets/messages_header.dart';
 import 'widgets/messages_search_bar.dart';
 
@@ -12,7 +10,7 @@ class MessagesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEAF0EA),
+      backgroundColor: AppColors.navBarLight,
       body: SafeArea(
         child: Column(
           children: [
@@ -37,29 +35,24 @@ class MessagesScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.w900,
-                        color: Color(0xFF16351F),
+                        color: AppColors.primary,
                       ),
                     ),
                     const SizedBox(height: 18),
                     Expanded(
-                      child: ListView.separated(
-                        itemCount: MessagesMockData.conversations.length,
-                        separatorBuilder: (_, __) => const Divider(height: 24),
-                        itemBuilder: (context, index) {
-                          final conversation =
-                              MessagesMockData.conversations[index];
-                          return ConversationCard(
-                            conversation: conversation,
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => ChatDetailScreen(
-                                  name: conversation.name,
-                                  avatar: conversation.avatar,
-                                ),
-                              ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: Text(
+                            'Hozircha suhbatlar yo‘q.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary.withValues(alpha: 0.55),
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
                     ),
                   ],

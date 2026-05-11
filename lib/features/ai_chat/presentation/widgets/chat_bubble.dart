@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/design_system/app_typography.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/chat_message_entity.dart';
 
@@ -19,31 +20,35 @@ class ChatBubble extends StatelessWidget {
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * .78,
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
           color: isUser ? AppColors.primary : Colors.white,
           borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(22),
-            topRight: const Radius.circular(22),
-            bottomLeft: Radius.circular(isUser ? 22 : 6),
-            bottomRight: Radius.circular(isUser ? 6 : 22),
+            topLeft: const Radius.circular(18),
+            topRight: const Radius.circular(18),
+            bottomLeft: Radius.circular(isUser ? 18 : 6),
+            bottomRight: Radius.circular(isUser ? 6 : 18),
           ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: .035),
-              blurRadius: 16,
-              offset: const Offset(0, 8),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
         child: Text(
           message.text,
-          style: TextStyle(
-            color: isUser ? Colors.white : const Color(0xFF101828),
-            fontSize: 16,
-            height: 1.35,
-            fontWeight: FontWeight.w600,
-          ),
+          style: isUser
+              ? AppTypography.body(context).copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                )
+              : AppTypography.caption(context).copyWith(
+                  color: const Color(0xFF101828),
+                  fontWeight: FontWeight.w500,
+                  height: 1.38,
+                ),
         ),
       ),
     );

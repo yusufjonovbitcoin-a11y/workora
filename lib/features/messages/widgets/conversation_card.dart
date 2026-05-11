@@ -42,7 +42,7 @@ class _Avatar extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 30,
-          backgroundColor: const Color(0xFF7FA384),
+          backgroundColor: AppColors.primaryLight,
           child: Text(avatar, style: const TextStyle(fontSize: 28)),
         ),
         Positioned(
@@ -52,7 +52,7 @@ class _Avatar extends StatelessWidget {
             width: 13,
             height: 13,
             decoration: BoxDecoration(
-              color: const Color(0xFF16A34A),
+              color: AppColors.primary,
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2),
             ),
@@ -148,7 +148,10 @@ class _ConversationMeta extends StatelessWidget {
                   ),
                 ),
               )
-            : const Icon(Icons.done_all_rounded, color: Color(0xFF9AB79E)),
+            : Icon(
+                Icons.done_all_rounded,
+                color: AppColors.primary.withValues(alpha: 0.45),
+              ),
       ],
     );
   }

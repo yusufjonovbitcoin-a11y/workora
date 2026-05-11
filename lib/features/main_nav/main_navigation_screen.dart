@@ -30,7 +30,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return Scaffold(
       extendBody: true,
       body: IndexedStack(index: currentIndex, children: screens),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       bottomNavigationBar: currentIndex == 1
           ? null
           : Material(
@@ -46,4 +46,3 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 }
-

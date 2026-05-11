@@ -1,10 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// IshTopdi — yuqorida qotib turadigan blur header (iOS uslubida).
-/// [brand] berilsa matn o‘rniga shu widget (masalan SVG logo) chiqadi.
+import '../../../../core/design_system/app_spacing.dart';
+import '../../../../core/design_system/app_typography.dart';
+
+/// Qotib turadigan ixcham header — balandlik kontent bo‘yicha (fixed height yo‘q).
 class HomeStickyHeader extends StatelessWidget {
   const HomeStickyHeader({
     super.key,
@@ -16,50 +18,54 @@ class HomeStickyHeader extends StatelessWidget {
 
   final bool elevated;
   final VoidCallback? onNotificationTap;
-
-  /// Matn o‘rniga ko‘rsatiladigan logo yoki brend.
   final Widget? brand;
-
-  /// Masalan orqaga (`Navigator.pop`) tugmasi.
   final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final onSurface = scheme.onSurface;
+
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 280),
+      duration: const Duration(milliseconds: 220),
       curve: Curves.easeOutCubic,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(
-              alpha: elevated ? 0.08 : 0.04,
-            ),
-            blurRadius: elevated ? 22 : 14,
-            offset: Offset(0, elevated ? 10 : 5),
+            color: Colors.black.withValues(alpha: elevated ? 0.06 : 0.03),
+            blurRadius: elevated ? 12 : 8,
+            offset: Offset(0, elevated ? 4 : 2),
           ),
         ],
       ),
       child: ClipRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(20, 8, 16, 12),
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: DecoratedBox(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.82),
+              color: Theme.of(context).scaffoldBackgroundColor.withValues(
+                    alpha: Theme.of(context).brightness == Brightness.dark
+                        ? 0.88
+                        : 0.92,
+                  ),
               border: Border(
                 bottom: BorderSide(
-                  color: Colors.black.withValues(alpha: 0.06),
+                  color: scheme.outline.withValues(alpha: 0.35),
                 ),
               ),
             ),
-            child: SizedBox(
-              height: 44,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                AppSpacing.s16.w,
+                AppSpacing.s12.h,
+                AppSpacing.s12.w,
+                AppSpacing.s12.h,
+              ),
               child: Row(
                 children: [
                   if (leading != null) ...[
                     leading!,
-                    const SizedBox(width: 4),
+                    SizedBox(width: AppSpacing.s8.w),
                   ],
                   Expanded(
                     child: Align(
@@ -67,12 +73,11 @@ class HomeStickyHeader extends StatelessWidget {
                       child: brand ??
                           Text(
                             'IshTopdi',
-                            style: GoogleFonts.inter(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.6,
-                              color: const Color(0xFF0F172A),
-                              height: 1.1,
+                            style: AppTypography.appBarTitle(context).copyWith(
+                              color: onSurface,
+                              fontSize: 22.sp,
+                              height: 1.15,
+                              letterSpacing: -0.35,
                             ),
                           ),
                     ),
@@ -81,15 +86,15 @@ class HomeStickyHeader extends StatelessWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: onNotificationTap,
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(12.r),
                       child: Ink(
-                        width: 44,
-                        height: 44,
+                        width: 46.r,
+                        height: 46.r,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF4F6F8),
-                          borderRadius: BorderRadius.circular(14),
+                          color: scheme.surface.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(12.r),
                           border: Border.all(
-                            color: Colors.black.withValues(alpha: 0.04),
+                            color: scheme.outline.withValues(alpha: 0.35),
                           ),
                         ),
                         child: Stack(
@@ -97,17 +102,17 @@ class HomeStickyHeader extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.notifications_none_rounded,
-                              size: 24,
-                              color: Colors.grey.shade800,
+                              size: 24.r,
+                              color: onSurface.withValues(alpha: 0.75),
                             ),
                             Positioned(
-                              top: 10,
-                              right: 10,
+                              top: 9.r,
+                              right: 9.r,
                               child: Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFF22C55E),
+                                width: 7.r,
+                                height: 7.r,
+                                decoration: BoxDecoration(
+                                  color: scheme.primary,
                                   shape: BoxShape.circle,
                                 ),
                               ),
